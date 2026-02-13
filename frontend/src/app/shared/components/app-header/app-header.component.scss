@@ -1,0 +1,177 @@
+.app-header {
+  width: 100%;
+  height: var(--header-height);
+  background-color: var(--color-white);
+  border-bottom: var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--spacing-3xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+// SONXTRA Logo (exact match from cp360.pen)
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-neutral-gray);
+    letter-spacing: 0;
+  }
+
+  .logo-support {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-neutral-gray);
+    letter-spacing: 0;
+  }
+}
+
+// Header Navigation
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sonxtra-red);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+      text-decoration: none;
+    }
+  }
+}
+
+// User Menu
+.user-menu {
+  position: relative;
+
+  .user-menu-button {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-small);
+    padding: 8px 12px;
+    background-color: transparent;
+    border: var(--border);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--color-gray-50);
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-neutral-gray);
+    }
+
+    svg {
+      color: var(--color-gray-500);
+    }
+  }
+
+  .user-menu-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 200px;
+    background-color: var(--color-white);
+    border: var(--border);
+    border-radius: var(--radius-medium);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1001;
+
+    .menu-item {
+      width: 100%;
+      padding: var(--spacing-medium);
+      text-align: left;
+      font-size: 14px;
+      color: var(--color-neutral-gray);
+
+      &.caption {
+        font-size: 12px;
+        color: var(--color-gray-500);
+        padding: 8px var(--spacing-medium);
+      }
+    }
+
+    .menu-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-weight: 400;
+
+      &:hover {
+        background-color: var(--color-gray-50);
+      }
+
+      &.menu-logout {
+        color: var(--sonxtra-red);
+        font-weight: 600;
+      }
+    }
+
+    .menu-divider {
+      height: 1px;
+      background-color: var(--color-gray-200);
+      margin: var(--spacing-small) 0;
+    }
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 var(--spacing-base);
+  }
+
+  .header-nav {
+    gap: var(--spacing-base);
+
+    .nav-link {
+      display: none;
+
+      &:first-child {
+        display: block;
+      }
+    }
+  }
+
+  .brand-logo {
+    .logo-support {
+      display: none;
+    }
+  }
+}

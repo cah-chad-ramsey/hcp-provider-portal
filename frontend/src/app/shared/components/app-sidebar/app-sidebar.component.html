@@ -1,0 +1,16 @@
+<aside class="app-sidebar">
+  <div class="sidebar-header">
+    <h3>Navigation</h3>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="nav-item"
+    >
+      {{ item.label }}
+    </a>
+  </nav>
+</aside>

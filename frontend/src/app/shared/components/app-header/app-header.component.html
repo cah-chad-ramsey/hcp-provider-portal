@@ -1,0 +1,52 @@
+<header class="app-header">
+  <div class="header-content">
+    <!-- Left: SONXTRA Logo -->
+    <div class="brand-logo">
+      <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2l-8 8h6l-2 12 8-8h-6l2-12z" fill="#C41030"/>
+      </svg>
+      <span class="logo-text">SONXTRA</span>
+      <span class="logo-support">SUPPORT</span>
+    </div>
+
+    <!-- Right: Navigation -->
+    <nav class="header-nav">
+      <a href="#" class="nav-link">Important Safety Information</a>
+      <a href="#" class="nav-link">Prescribing Information</a>
+      <a href="#" class="nav-link">Medication Guide</a>
+
+      <!-- User Menu -->
+      <div class="user-menu" *ngIf="currentUser">
+        <button class="user-menu-button" (click)="toggleMenu()">
+          <span class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </button>
+
+        <div class="user-menu-dropdown" *ngIf="isMenuOpen">
+          <div class="menu-item">
+            <span class="caption">{{ currentUser.email }}</span>
+          </div>
+          <div class="menu-divider"></div>
+          <button class="menu-item menu-button" routerLink="/dashboard">
+            Dashboard
+          </button>
+          <button class="menu-item menu-button" routerLink="/patients">
+            Patients
+          </button>
+          <button class="menu-item menu-button" routerLink="/forms">
+            Forms
+          </button>
+          <button class="menu-item menu-button" routerLink="/messages">
+            Messages
+          </button>
+          <div class="menu-divider"></div>
+          <button class="menu-item menu-button menu-logout" (click)="logout()">
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
