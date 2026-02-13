@@ -97,15 +97,15 @@
           <mat-icon>people</mat-icon>
           Manage Patients
         </button>
-        <button mat-raised-button (click)="onViewForms()" class="action-button">
+        <button mat-raised-button color="accent" (click)="onViewForms()" class="action-button">
           <mat-icon>folder</mat-icon>
           Forms & Resources
         </button>
-        <button mat-raised-button (click)="onViewMessages()" class="action-button">
+        <button mat-raised-button color="accent" (click)="onViewMessages()" class="action-button">
           <mat-icon>forum</mat-icon>
           Secure Messages
         </button>
-        <button mat-raised-button *ngIf="isAdmin()" (click)="onViewAdmin()" class="action-button">
+        <button mat-raised-button color="accent" *ngIf="isAdmin()" (click)="onViewAdmin()" class="action-button">
           <mat-icon>admin_panel_settings</mat-icon>
           Admin Console
         </button>
