@@ -6,6 +6,6 @@ export const PROVIDERS_ROUTES: Routes = [
   {
     path: 'associate',
     component: ProviderAssociationComponent,
-    canActivate: [roleGuard(['OFFICE_STAFF', 'SUPPORT_AGENT'])]
+    canActivate: [roleGuard(['OFFICE_STAFF', 'SUPPORT_AGENT', 'ADMIN'])]
   }
 ];

@@ -50,8 +50,8 @@ public class ProviderController {
     }
 
     @PostMapping("/associate")
-    @PreAuthorize("hasRole('OFFICE_STAFF')")
-    @Operation(summary = "Request provider affiliation", description = "Office staff can request affiliation with a provider")
+    @PreAuthorize("hasAnyRole('OFFICE_STAFF', 'SUPPORT_AGENT', 'ADMIN')")
+    @Operation(summary = "Request provider affiliation", description = "Office staff, support agents, and admins can request affiliation with a provider")
     public ResponseEntity<ProviderAffiliationResponse> requestAffiliation(
             @Valid @RequestBody ProviderAffiliationRequest request) {
         log.info("Requesting provider affiliation: providerId={}", request.getProviderId());
@@ -60,7 +60,7 @@ public class ProviderController {
     }
 
     @GetMapping("/affiliations")
-    @PreAuthorize("hasAnyRole('OFFICE_STAFF', 'SUPPORT_AGENT')")
+    @PreAuthorize("hasAnyRole('OFFICE_STAFF', 'SUPPORT_AGENT', 'ADMIN')")
     @Operation(summary = "Get user affiliations", description = "Get current user's provider affiliations")
     public ResponseEntity<List<ProviderAffiliationResponse>> getUserAffiliations() {
         log.info("Getting user affiliations");

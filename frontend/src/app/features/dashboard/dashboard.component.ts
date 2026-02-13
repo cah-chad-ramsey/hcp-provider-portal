@@ -92,4 +92,8 @@ export class DashboardComponent implements OnInit {
   isAdmin(): boolean {
     return this.authService.hasRole('ADMIN');
   }
+
+  canRequestAffiliation(): boolean {
+    return this.authService.hasAnyRole(['OFFICE_STAFF', 'SUPPORT_AGENT', 'ADMIN']);
+  }
 }

@@ -2,7 +2,7 @@
   <h1>Welcome to the HCP Provider Portal</h1>
 
   <!-- Getting Started / Affiliation Status Card -->
-  <div class="affiliation-status-card" *ngIf="currentUser$ | async as user">
+  <div class="affiliation-status-card" *ngIf="(currentUser$ | async) && canRequestAffiliation()">
     <mat-card>
       <mat-card-header>
         <mat-card-title>
@@ -89,7 +89,7 @@
         <mat-card-title>Quick Actions</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <button mat-raised-button color="primary" (click)="onRequestAffiliation()" class="action-button">
+        <button mat-raised-button color="primary" *ngIf="canRequestAffiliation()" (click)="onRequestAffiliation()" class="action-button">
           <mat-icon>badge</mat-icon>
           Provider Association
         </button>
