@@ -78,6 +78,12 @@ html {
   // Material 3 color tokens override
   --mat-app-background-color: #F9FAFB;
   --mat-app-text-color: #374151;
+  --mat-app-surface: #FFFFFF;
+  --mat-app-surface-variant: #FFFFFF;
+
+  // Card overrides - force white backgrounds
+  --mdc-elevated-card-container-color: #FFFFFF;
+  --mat-card-background-color: #FFFFFF;
 
   // Button overrides
   --mdc-filled-button-container-color: #C41030;
@@ -167,6 +173,9 @@ html {
 
 .mat-mdc-card {
   --mdc-elevated-card-container-shape: 8px !important;
+  --mdc-elevated-card-container-color: #FFFFFF !important;
+  --mat-card-subtitle-text-color: #6B7280 !important;
+  background-color: #FFFFFF !important;
   border-radius: var(--radius-medium) !important;
   border: var(--border) !important;
   box-shadow: none !important;
