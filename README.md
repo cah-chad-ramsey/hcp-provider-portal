@@ -66,12 +66,55 @@ Healthcare Provider Portal for Sonexus Support that enables office staff, suppor
 
 ### Prerequisites
 
-- Docker & Docker Compose
-- Java 17 (for local development)
-- Node.js 20+ (for local development)
-- Maven 3.9+ (for local development)
+**For Local Development (Recommended):**
+- Java 21 - `brew install openjdk@21`
+- Maven 3.9+ - `brew install maven`
+- PostgreSQL 15 - `brew install postgresql@15`
+- Node.js 20+ - `brew install node`
 
-### Running with Docker Compose
+**For Docker:**
+- Docker & Docker Compose
+
+### Option 1: Local Development (Recommended)
+
+The easiest way to run the portal locally with full hot-reload capabilities:
+
+**Terminal 1 - Backend:**
+```bash
+./start-backend.sh
+```
+
+**Terminal 2 - Frontend:**
+```bash
+./start-frontend.sh
+```
+
+The scripts will automatically:
+- ✅ Check all prerequisites (Java 21, Maven, PostgreSQL, Node.js)
+- ✅ Start PostgreSQL if not running
+- ✅ Create database and postgres role if needed
+- ✅ Grant database permissions
+- ✅ Kill conflicting processes on ports 8080/4200
+- ✅ Install dependencies (first run only)
+- ✅ Set JAVA_HOME to Java 21
+- ✅ Start the dev servers
+
+**Access the application:**
+- Frontend: http://localhost:4200
+- Backend API: http://localhost:8080
+- Swagger UI: http://localhost:8080/swagger-ui
+
+**Login credentials:**
+- Admin: `admin` / `password` (ADMIN role)
+- Staff: `staff` / `password` (OFFICE_STAFF role)
+- Agent: `agent` / `password` (SUPPORT_AGENT role)
+
+**First-time setup notes:**
+- Maven will download ~150MB of dependencies (5-10 minutes)
+- npm will install frontend packages (3-5 minutes)
+- If on corporate VPN and Maven fails, disconnect temporarily for initial download
+
+### Option 2: Running with Docker Compose
 
 1. **Clone the repository**
    ```bash
@@ -104,6 +147,10 @@ Healthcare Provider Portal for Sonexus Support that enables office staff, suppor
 
 ### Stopping Services
 
+**Local Development:**
+- Press `Ctrl+C` in each terminal window
+
+**Docker:**
 ```bash
 docker compose down
 ```
@@ -144,20 +191,59 @@ docker-compose.yml # Service orchestration
 
 ## Development
 
-### Backend Development
+### Running Locally
 
+Use the provided start scripts for the best development experience:
+
+**Backend (Terminal 1):**
+```bash
+./start-backend.sh
+```
+- Automatically sets JAVA_HOME to Java 21
+- Starts PostgreSQL if needed
+- Creates database and roles automatically
+- Hot reload enabled via Spring Boot DevTools
+- Logs visible in terminal
+
+**Frontend (Terminal 2):**
+```bash
+./start-frontend.sh
+```
+- Automatically installs dependencies if needed
+- Kills conflicting processes on port 4200
+- Hot reload enabled via Angular CLI
+- Opens browser automatically
+
+### Manual Development (Advanced)
+
+If you prefer manual control:
+
+**Backend:**
 ```bash
 cd backend
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 mvn spring-boot:run
 ```
 
-### Frontend Development
-
+**Frontend:**
 ```bash
 cd frontend
 npm install
 npm start
 ```
+
+### Configuration
+
+**Backend Environment Variables:**
+- `DB_HOST` - Database host (default: localhost)
+- `DB_PORT` - Database port (default: 5432)
+- `DB_NAME` - Database name (default: hcp_portal)
+- `DB_USER` - Database user (default: postgres)
+- `DB_PASSWORD` - Database password (default: postgres)
+
+**Frontend Environment:**
+- `environment.ts` - Development settings
+- `environment.prod.ts` - Production settings
 
 ## API Documentation
 
@@ -220,19 +306,92 @@ npm run e2e
 
 ## Troubleshooting
 
-### Port Conflicts
+### Start Script Issues
+
+**"Java 21 is not installed"**
+```bash
+brew install openjdk@21
+```
+
+**"PostgreSQL is not installed"**
+```bash
+brew install postgresql@15
+```
+
+**"Maven SSL/Certificate errors" (Corporate VPN)**
+- Disconnect from VPN temporarily for first-time Maven dependency download
+- Dependencies are cached in `~/.m2/repository` and work on VPN after initial download
+
+**"Port 8080/4200 already in use"**
+- The start scripts automatically kill conflicting processes
+- Or manually: `lsof -ti:8080 | xargs kill -9`
+
+**"Database 'hcp_portal' does not exist"**
+- The backend start script creates it automatically
+- Or manually: `createdb hcp_portal`
+
+**"Role 'postgres' does not exist"**
+- The backend start script creates it automatically
+- Or manually: `psql -d postgres -c "CREATE ROLE postgres WITH LOGIN PASSWORD 'postgres' SUPERUSER;"`
+
+**"Lombok getters not found" / Compilation errors**
+- Ensure you're using Java 21 (not Java 25)
+- Check: `java -version` should show version 21
+- The start script automatically sets JAVA_HOME
+
+**Backend won't start without MinIO**
+- MinIO is optional for local development
+- File upload features won't work but everything else will
+- Warning will be logged but app will start
+
+### Docker Issues
+
+**Port Conflicts**
 If you have services running on the default ports, you can modify the ports in `docker-compose.yml`.
 
-### Database Connection Issues
+**Database Connection Issues**
 Ensure PostgreSQL is healthy before backend starts:
 ```bash
 docker compose logs postgres
 ```
 
-### MinIO Bucket Not Created
+**MinIO Bucket Not Created**
 Check the minio-init service logs:
 ```bash
 docker compose logs minio-init
+```
+
+### Common Fixes
+
+**Clear Maven cache:**
+```bash
+rm -rf ~/.m2/repository
+```
+
+**Clear npm cache:**
+```bash
+cd frontend
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+**Reset PostgreSQL database:**
+```bash
+dropdb hcp_portal
+createdb hcp_portal
+# Restart backend - Flyway will recreate tables
+```
+
+**Check logs:**
+```bash
+# Backend logs
+cd backend
+mvn spring-boot:run 2>&1 | tee backend.log
+
+# Frontend logs
+cd frontend
+npm start 2>&1 | tee frontend.log
 ```
 
 ## License
