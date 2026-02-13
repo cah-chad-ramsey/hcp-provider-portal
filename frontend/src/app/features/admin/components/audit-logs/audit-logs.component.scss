@@ -1,0 +1,219 @@
+// Design System Colors from cp360.pen
+$cardinal-red: #C41030;
+$sonexus-teal: #008E97;
+$neutral-gray: #374151;
+$heading-color: #111827;
+$body-text: #374151;
+$caption-color: #6B7280;
+$border-color: #E5E7EB;
+$background-light: #F9FAFB;
+$white: #FFFFFF;
+
+.audit-logs-container {
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: $heading-color;
+    margin: 0 0 24px 0;
+  }
+
+  .filters-card {
+    margin-bottom: 24px;
+    background: $white;
+
+    mat-card-header {
+      margin-bottom: 16px;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: $heading-color;
+
+        mat-icon {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .filter-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      .filter-actions {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        grid-column: 1 / -1;
+
+        button {
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  .logs-card {
+    background: $white;
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+
+    p {
+      margin-top: 16px;
+      color: $caption-color;
+    }
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background-color: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    border-radius: 4px;
+    color: $cardinal-red;
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: $caption-color;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: $heading-color;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      color: $caption-color;
+      margin: 0;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+
+    .audit-table {
+      width: 100%;
+
+      th {
+        font-weight: 600;
+        color: $heading-color;
+        background: $background-light;
+      }
+
+      td {
+        color: $body-text;
+        font-size: 14px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .user-name {
+          font-weight: 500;
+          color: $heading-color;
+        }
+
+        .user-email {
+          font-size: 12px;
+          color: $caption-color;
+        }
+      }
+
+      .resource-id {
+        font-size: 12px;
+        color: $caption-color;
+        font-family: 'Monaco', 'Courier New', monospace;
+      }
+
+      .action-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.action-create {
+          background: #D1FAE5;
+          color: #065F46;
+        }
+
+        &.action-view {
+          background: #DBEAFE;
+          color: #1E40AF;
+        }
+
+        &.action-update {
+          background: #FEF3C7;
+          color: #92400E;
+        }
+
+        &.action-delete {
+          background: #FEE2E2;
+          color: #991B1B;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .audit-logs-container {
+    padding: 16px;
+
+    .filters-card {
+      .filter-form {
+        grid-template-columns: 1fr;
+
+        .filter-actions {
+          flex-direction: column;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .table-container {
+      .audit-table {
+        font-size: 12px;
+      }
+    }
+  }
+}

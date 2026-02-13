@@ -1,0 +1,163 @@
+.benefits-wizard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .patient-name {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+    }
+  }
+}
+
+.step-content {
+  padding: 24px 0;
+  min-height: 400px;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  color: #1565c0;
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px;
+
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  .result-card {
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    mat-card-header {
+      margin-bottom: 8px;
+
+      mat-card-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    mat-card-content {
+      .result-value {
+        font-size: 20px;
+        font-weight: 500;
+
+        &.required {
+          color: #d32f2f;
+        }
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+.consent-card {
+  background-color: #fff3e0;
+
+  .consent-text {
+    margin-bottom: 24px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  mat-checkbox {
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+
+    .result-card.full-width {
+      grid-column: 1;
+    }
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

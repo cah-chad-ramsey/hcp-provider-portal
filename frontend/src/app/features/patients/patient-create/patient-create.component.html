@@ -1,0 +1,118 @@
+<div class="patient-create-container">
+  <div class="header">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Create New Patient</h1>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+        <!-- Basic Information -->
+        <div class="section">
+          <h3>Basic Information</h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" required>
+              <mat-error *ngIf="patientForm.get('firstName')?.hasError('required')">
+                First name is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName" required>
+              <mat-error *ngIf="patientForm.get('lastName')?.hasError('required')">
+                Last name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Date of Birth</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" [max]="maxDate" required>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="patientForm.get('dateOfBirth')?.hasError('required')">
+                Date of birth is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Gender</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option *ngFor="let option of genderOptions" [value]="option.value">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="section">
+          <h3>Contact Information</h3>
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Phone</mat-label>
+              <input matInput formControlName="phone" type="tel">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email">
+              <mat-error *ngIf="patientForm.get('email')?.hasError('email')">
+                Please enter a valid email
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="section">
+          <h3>Address</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address Line 1</mat-label>
+            <input matInput formControlName="addressLine1">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address Line 2</mat-label>
+            <input matInput formControlName="addressLine2">
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>City</mat-label>
+              <input matInput formControlName="city">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="max-width: 120px;">
+              <mat-label>State</mat-label>
+              <input matInput formControlName="state" maxlength="2">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="max-width: 150px;">
+              <mat-label>ZIP Code</mat-label>
+              <input matInput formControlName="zipCode">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || patientForm.invalid">
+            <span *ngIf="!loading">Create Patient</span>
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

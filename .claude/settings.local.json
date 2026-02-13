@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(docker compose up:*)",
+      "Bash(java:*)",
+      "Bash(mvn:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(chmod:*)",
+      "Bash(bash -c '\necho \"\"Checking prerequisites...\"\"\necho \"\"\"\"\n\n# Check PostgreSQL\nif command -v psql &> /dev/null; then\n    echo \"\"✅ PostgreSQL installed\"\"\n    if pg_isready -h localhost -p 5432 > /dev/null 2>&1; then\n        echo \"\"✅ PostgreSQL is running\"\"\n    else\n        echo \"\"❌ PostgreSQL is NOT running\"\"\n        echo \"\"   Start with: brew services start postgresql@15\"\"\n    fi\n\n    if psql -lqt | cut -d \\\\| -f 1 | grep -qw hcp_portal; then\n        echo \"\"✅ Database hcp_portal exists\"\"\n    else\n        echo \"\"❌ Database hcp_portal does NOT exist\"\"\n        echo \"\"   Create with: createdb hcp_portal\"\"\n    fi\nelse\n    echo \"\"❌ PostgreSQL not installed\"\"\n    echo \"\"   Install with: brew install postgresql@15\"\"\nfi\n\necho \"\"\"\"\n\n# Check Maven\nif command -v mvn &> /dev/null; then\n    echo \"\"✅ Maven installed \\($\\(mvn --version | head -n1\\)\\)\"\"\nelse\n    echo \"\"❌ Maven not installed\"\"\n    echo \"\"   Install with: brew install maven\"\"\nfi\n\necho \"\"\"\"\n\n# Check Node/npm\nif command -v node &> /dev/null; then\n    echo \"\"✅ Node.js installed \\($\\(node --version\\)\\)\"\"\nelse\n    echo \"\"❌ Node.js not installed\"\"\n    echo \"\"   Install with: brew install node\"\"\nfi\n\nif command -v npm &> /dev/null; then\n    echo \"\"✅ npm installed \\($\\(npm --version\\)\\)\"\"\nelse\n    echo \"\"❌ npm not installed\"\"\nfi\n\necho \"\"\"\"\n\n# Check Maven settings\nif [ -f ~/.m2/settings.xml ]; then\n    echo \"\"✅ Maven settings.xml exists\"\"\nelse\n    echo \"\"⚠️  Maven settings.xml not found\"\"\n    echo \"\"   This may cause SSL certificate issues\"\"\nfi\n\necho \"\"\"\"\n')",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/pg_isready:*)",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/psql -l)",
+      "Bash(export DB_HOST=localhost DB_PORT=5432 DB_NAME=hcp_portal DB_USER=chad.ramsey DB_PASSWORD=\"\":*)",
+      "Bash(MAVEN_OPTS=\"-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -Djavax.net.ssl.trustStore=/dev/null -Djavax.net.ssl.trustStoreType=jks\" mvn dependency:resolve:*)",
+      "Bash(MAVEN_OPTS=\"-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true\" mvn clean compile:*)",
+      "Bash(docker build:*)",
+      "Bash(open:*)",
+      "Bash(docker --version:*)",
+      "Bash(docker info:*)",
+      "Bash(colima status:*)",
+      "Bash(mdfind:*)",
+      "Bash(brew list:*)",
+      "Bash(tee:*)",
+      "Bash(/usr/libexec/java_home:*)",
+      "Bash(export JAVA_HOME:*)",
+      "Bash(grep:*)",
+      "Bash(psql:*)",
+      "Bash(brew services:*)",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/psql:*)",
+      "Bash(curl:*)",
+      "Bash(htpasswd:*)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+<div class="thread-list-container">
+  <div class="header">
+    <h1>Secure Messages</h1>
+    <button mat-raised-button color="primary" (click)="composeMessage()">
+      <mat-icon>add</mat-icon>
+      New Message
+    </button>
+  </div>
+
+  <mat-card class="threads-card">
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading messages...</p>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <div *ngIf="!loading && !error">
+        <div *ngIf="threads.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <h3>No messages yet</h3>
+          <p>Start a conversation by clicking "New Message"</p>
+        </div>
+
+        <div *ngIf="threads.length > 0" class="thread-list">
+          <div
+            *ngFor="let thread of threads"
+            class="thread-item"
+            [class.unread]="thread.unreadCount > 0"
+            (click)="openThread(thread.id)">
+
+            <div class="thread-avatar">
+              <mat-icon>forum</mat-icon>
+            </div>
+
+            <div class="thread-content">
+              <div class="thread-header">
+                <span class="thread-subject">{{ thread.subject }}</span>
+                <span class="thread-time">{{ formatDate(thread.lastMessageAt) }}</span>
+              </div>
+
+              <div class="thread-meta">
+                <span class="thread-info">
+                  <mat-icon class="small-icon">person</mat-icon>
+                  {{ thread.createdByName }}
+                </span>
+                <span *ngIf="thread.programName" class="thread-info">
+                  <mat-icon class="small-icon">label</mat-icon>
+                  {{ thread.programName }}
+                </span>
+                <span *ngIf="thread.patientName" class="thread-info">
+                  <mat-icon class="small-icon">local_hospital</mat-icon>
+                  {{ thread.patientName }}
+                </span>
+              </div>
+            </div>
+
+            <div class="thread-badge" *ngIf="thread.unreadCount > 0">
+              <span class="unread-count">{{ thread.unreadCount }}</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-paginator
+          *ngIf="totalElements > pageSize"
+          [length]="totalElements"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[10, 20, 50]"
+          (page)="onPageChange($event)">
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

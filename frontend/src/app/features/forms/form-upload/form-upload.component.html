@@ -1,0 +1,110 @@
+<div class="form-upload-container">
+  <div class="header">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Upload Form Resource</h1>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <!-- File Upload Section -->
+        <div class="section">
+          <h2>File</h2>
+
+          <div class="file-upload-area">
+            <input type="file"
+                   #fileInput
+                   (change)="onFileSelected($event)"
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                   style="display: none;">
+
+            <div class="file-upload-button" *ngIf="!selectedFile" (click)="fileInput.click()">
+              <mat-icon>cloud_upload</mat-icon>
+              <p>Click to select a file</p>
+              <span class="file-types">PDF, Word, Excel, or Image files (Max 50MB)</span>
+            </div>
+
+            <div class="file-preview" *ngIf="selectedFile">
+              <div class="preview-card">
+                <img [src]="filePreview" *ngIf="filePreview" alt="File preview">
+                <div class="file-info" *ngIf="!filePreview">
+                  <mat-icon class="file-icon">{{ getFileIcon() }}</mat-icon>
+                  <div class="file-details">
+                    <strong>{{ selectedFile.name }}</strong>
+                    <span>{{ formatFileSize(selectedFile.size) }}</span>
+                  </div>
+                </div>
+                <button mat-icon-button type="button" (click)="fileInput.click()" class="change-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata Section -->
+        <div class="section">
+          <h2>Form Information</h2>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="uploadForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"></textarea>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Program (Optional)</mat-label>
+              <mat-select formControlName="programId">
+                <mat-option [value]="">None</mat-option>
+                <mat-option *ngFor="let program of programs" [value]="program.id">
+                  {{ program.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="category" required>
+                <mat-option *ngFor="let category of categories" [value]="category">
+                  {{ category }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="uploadForm.get('category')?.hasError('required')">
+                Category is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <mat-checkbox formControlName="complianceApproved">
+            <strong>Compliance Approved</strong>
+            <p class="checkbox-description">
+              Mark this form as compliance-approved for regulatory purposes
+            </p>
+          </mat-checkbox>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit"
+                  [disabled]="loading || uploadForm.invalid || !selectedFile">
+            <span *ngIf="!loading">Upload Form</span>
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

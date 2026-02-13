@@ -1,0 +1,80 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="assets/sonxtra-logo.svg" alt="SONXTRA SUPPORT" class="logo">
+    </div>
+
+    <!-- Title -->
+    <div class="login-header">
+      <h1>Provider Portal</h1>
+      <p class="subtitle">Sign in to your account</p>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email"
+               class="form-input"
+               formControlName="email"
+               placeholder="email@example.com">
+        <div class="form-error" *ngIf="emailControl?.invalid && emailControl?.touched">
+          <span *ngIf="emailControl?.hasError('required')">Email is required</span>
+          <span *ngIf="emailControl?.hasError('email')">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-input-wrapper">
+          <input [type]="hidePassword ? 'password' : 'text'"
+                 class="form-input"
+                 formControlName="password"
+                 placeholder="Enter your password">
+          <button type="button"
+                  class="password-toggle"
+                  (click)="hidePassword = !hidePassword"
+                  tabindex="-1">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+        <div class="form-error" *ngIf="passwordControl?.invalid && passwordControl?.touched">
+          <span *ngIf="passwordControl?.hasError('required')">Password is required</span>
+          <span *ngIf="passwordControl?.hasError('minlength')">Password must be at least 6 characters</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="error">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <button type="submit"
+              class="login-button"
+              [disabled]="loading || loginForm.invalid">
+        <span *ngIf="!loading">Sign In</span>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </button>
+    </form>
+
+    <!-- Demo Credentials -->
+    <div class="demo-credentials">
+      <p class="demo-title">Demo Credentials:</p>
+      <div class="credential-list">
+        <div class="credential-item">
+          <span class="credential-label">Admin:</span>
+          <span class="credential-value">admin&#64;sonexus.com / password</span>
+        </div>
+        <div class="credential-item">
+          <span class="credential-label">Staff:</span>
+          <span class="credential-value">staff&#64;sonexus.com / password</span>
+        </div>
+        <div class="credential-item">
+          <span class="credential-label">Agent:</span>
+          <span class="credential-value">agent&#64;sonexus.com / password</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

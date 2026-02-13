@@ -1,0 +1,274 @@
+<div class="benefits-wizard-container">
+  <div class="header">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-info">
+      <h1>Benefits Investigation</h1>
+      <span class="patient-name" *ngIf="patient">{{ patient.firstName }} {{ patient.lastName }} ({{ patient.referenceId }})</span>
+    </div>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-stepper [linear]="true" #stepper>
+        <!-- Step 1: Enter Information -->
+        <mat-step [stepControl]="informationForm">
+          <form [formGroup]="informationForm">
+            <ng-template matStepLabel>Enter Information</ng-template>
+
+            <div class="step-content">
+              <h2>Insurance and Medication Information</h2>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Select Program</mat-label>
+                <mat-select formControlName="programId" required>
+                  <mat-option *ngFor="let program of programs" [value]="program.id">
+                    {{ program.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="informationForm.get('programId')?.hasError('required')">
+                  Program is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Medication Name</mat-label>
+                <input matInput formControlName="medicationName" required>
+                <mat-error *ngIf="informationForm.get('medicationName')?.hasError('required')">
+                  Medication name is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Insurance Payer Name</mat-label>
+                <input matInput formControlName="payerName" required placeholder="e.g., Blue Cross Blue Shield, Aetna">
+                <mat-error *ngIf="informationForm.get('payerName')?.hasError('required')">
+                  Payer name is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Plan ID (Optional)</mat-label>
+                <input matInput formControlName="payerPlanId">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Member ID</mat-label>
+                <input matInput formControlName="memberId" required>
+                <mat-error *ngIf="informationForm.get('memberId')?.hasError('required')">
+                  Member ID is required
+                </mat-error>
+              </mat-form-field>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Patient State</mat-label>
+                  <input matInput formControlName="patientState" maxlength="2">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Patient Date of Birth</mat-label>
+                  <input matInput formControlName="patientDob" type="date">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button (click)="onCancel()">Cancel</button>
+              <button mat-raised-button color="primary" matStepperNext
+                      [disabled]="informationForm.invalid">
+                Next
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- Step 2: Insurance Results (Medical) -->
+        <mat-step>
+          <ng-template matStepLabel>Medical Coverage</ng-template>
+
+          <div class="step-content">
+            <h2>Medical Insurance Results</h2>
+
+            <div *ngIf="!medicalResult && !investigating" class="info-message">
+              <mat-icon>info</mat-icon>
+              <p>Click "Run Investigation" to check medical coverage</p>
+            </div>
+
+            <div *ngIf="investigating" class="loading-state">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Running benefits investigation...</p>
+            </div>
+
+            <div *ngIf="medicalResult" class="results-grid">
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Coverage Status</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value">{{ medicalResult.coverageStatus }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Coverage Type</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value">{{ medicalResult.coverageType }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Prior Authorization</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value" [class.required]="medicalResult.priorAuthRequired">
+                    {{ medicalResult.priorAuthRequired ? 'Required' : 'Not Required' }}
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Deductible</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value">
+                    {{ medicalResult.deductibleApplies ? 'Applies' : 'Does Not Apply' }}
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card full-width" *ngIf="medicalResult.notes">
+                <mat-card-header>
+                  <mat-card-title>Notes</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p>{{ medicalResult.notes }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext
+                    [disabled]="!medicalResult || investigating">
+              Next
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- Step 3: Insurance Results (Pharmacy) -->
+        <mat-step>
+          <ng-template matStepLabel>Pharmacy Coverage</ng-template>
+
+          <div class="step-content">
+            <h2>Pharmacy Insurance Results</h2>
+
+            <div *ngIf="pharmacyResult" class="results-grid">
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Coverage Status</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value">{{ pharmacyResult.coverageStatus }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Coverage Type</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value">{{ pharmacyResult.coverageType }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Specialty Pharmacy</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value" [class.required]="pharmacyResult.specialtyPharmacyRequired">
+                    {{ pharmacyResult.specialtyPharmacyRequired ? 'Required' : 'Not Required' }}
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>Prior Authorization</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="result-value" [class.required]="pharmacyResult.priorAuthRequired">
+                    {{ pharmacyResult.priorAuthRequired ? 'Required' : 'Not Required' }}
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="result-card full-width" *ngIf="pharmacyResult.notes">
+                <mat-card-header>
+                  <mat-card-title>Notes</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <p>{{ pharmacyResult.notes }}</p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext>
+              Next
+            </button>
+          </div>
+        </mat-step>
+
+        <!-- Step 4: Patient Authorization -->
+        <mat-step [stepControl]="authorizationForm">
+          <form [formGroup]="authorizationForm">
+            <ng-template matStepLabel>Patient Authorization</ng-template>
+
+            <div class="step-content">
+              <h2>Patient Authorization</h2>
+
+              <mat-card class="consent-card">
+                <mat-card-content>
+                  <p class="consent-text">
+                    I authorize the investigation of my insurance benefits and understand that the results
+                    will be used to determine my eligibility for patient assistance programs.
+                    I understand this is a benefits investigation only and does not guarantee program enrollment.
+                  </p>
+
+                  <mat-checkbox formControlName="patientConsent" required>
+                    Patient provides consent for benefits investigation
+                  </mat-checkbox>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-raised-button color="primary"
+                      [disabled]="authorizationForm.invalid || investigating"
+                      (click)="runInvestigations()">
+                <span *ngIf="!investigating">Run Investigation</span>
+                <mat-spinner *ngIf="investigating" diameter="20"></mat-spinner>
+              </button>
+              <button mat-raised-button color="accent"
+                      *ngIf="medicalResult && pharmacyResult"
+                      (click)="onComplete()">
+                Complete
+              </button>
+            </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,45 @@
+# Benefits Investigation Rules
+# Rule-based logic for MVP - to be replaced with HTTP API in production
+
+coverageTypeRules:
+  # Medicare rules
+  - payerKeywords: ["medicare", "cms", "part d", "part b"]
+    coverageType: MEDICARE
+
+  # Medicaid rules
+  - payerKeywords: ["medicaid"]
+    coverageType: MEDICAID
+
+  # Commercial insurance rules
+  - payerKeywords: ["blue cross", "blue shield", "bcbs", "aetna", "cigna", "united healthcare", "uhc", "anthem", "humana"]
+    coverageType: COMMERCIAL
+
+# Pharmacy-specific rules
+pharmacyRules:
+  specialtyPharmacyRequired:
+    # Specialty pharmacies
+    - keywords: ["optum", "caremark", "cvs specialty", "express scripts", "accredo", "walgreens specialty"]
+      required: true
+
+  priorAuthKeywords:
+    # Plan IDs or names that typically require prior auth
+    - keywords: ["PA-", "prior auth", "hmo"]
+      required: true
+
+# Prior authorization rules (medical)
+medicalPriorAuthRules:
+  # HMO plans typically require prior auth
+  - planKeywords: ["hmo"]
+    required: true
+
+  # Plans with PA prefix
+  - planPrefixes: ["PA-"]
+    required: true
+
+# Default values
+defaults:
+  coverageStatus: ACTIVE
+  coverageType: UNKNOWN
+  priorAuthRequired: false
+  deductibleApplies: true
+  specialtyPharmacyRequired: false

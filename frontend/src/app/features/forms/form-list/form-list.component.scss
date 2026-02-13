@@ -1,0 +1,227 @@
+.form-list-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+  }
+
+  button mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+
+  .filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 16px;
+    align-items: start;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      align-items: start;
+      padding-top: 8px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+
+  .form-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    mat-card-header {
+      margin-bottom: 16px;
+
+      .card-header-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        width: 100%;
+
+        .file-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          color: #3f51b5;
+        }
+
+        .header-text {
+          flex: 1;
+          min-width: 0;
+
+          mat-card-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+          }
+
+          mat-card-subtitle {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.6);
+          }
+        }
+      }
+    }
+
+    mat-card-content {
+      flex: 1;
+
+      .description {
+        font-size: 14px;
+        line-height: 1.5;
+        color: rgba(0, 0, 0, 0.7);
+        margin-bottom: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      .form-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          color: rgba(0, 0, 0, 0.6);
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+
+      .form-chips {
+        mat-chip {
+          font-size: 11px;
+          height: 24px;
+
+          &.compliance-chip {
+            background-color: #4caf50;
+            color: white;
+
+            mat-icon {
+              font-size: 16px;
+              width: 16px;
+              height: 16px;
+            }
+          }
+
+          &.version-chip {
+            background-color: #2196f3;
+            color: white;
+          }
+        }
+      }
+    }
+
+    mat-card-actions {
+      padding: 8px 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+      button {
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+
+  mat-icon {
+    font-size: 96px;
+    width: 96px;
+    height: 96px;
+    color: rgba(0, 0, 0, 0.3);
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  button mat-icon {
+    margin-right: 8px;
+  }
+}
+
+mat-paginator {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .filter-card .filter-form {
+    grid-template-columns: 1fr;
+
+    .filter-actions {
+      flex-direction: column;
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .forms-grid {
+    grid-template-columns: 1fr;
+  }
+}

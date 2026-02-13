@@ -1,0 +1,171 @@
+<div class="patient-detail-container" *ngIf="!loading && patient">
+  <div class="header">
+    <button mat-icon-button (click)="onBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-info">
+      <h1>{{ patient.firstName }} {{ patient.lastName }}</h1>
+      <span class="reference-id">{{ patient.referenceId }}</span>
+    </div>
+    <button mat-raised-button color="primary" (click)="enrollPatient()">
+      <mat-icon>add</mat-icon>
+      Enroll in Program
+    </button>
+  </div>
+
+  <mat-tab-group>
+    <!-- Overview Tab -->
+    <mat-tab label="Overview">
+      <div class="tab-content">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Patient Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Date of Birth</label>
+                <span>{{ formatDate(patient.dateOfBirth) }}</span>
+              </div>
+              <div class="info-item" *ngIf="patient.gender">
+                <label>Gender</label>
+                <span>{{ patient.gender }}</span>
+              </div>
+              <div class="info-item" *ngIf="patient.phone">
+                <label>Phone</label>
+                <span>{{ patient.phone }}</span>
+              </div>
+              <div class="info-item" *ngIf="patient.email">
+                <label>Email</label>
+                <span>{{ patient.email }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="patient.addressLine1">
+          <mat-card-header>
+            <mat-card-title>Address</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="address">
+              <p>{{ patient.addressLine1 }}</p>
+              <p *ngIf="patient.addressLine2">{{ patient.addressLine2 }}</p>
+              <p *ngIf="patient.city || patient.state || patient.zipCode">
+                {{ patient.city }}<span *ngIf="patient.city && patient.state">, </span>{{ patient.state }} {{ patient.zipCode }}
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Enrollments Tab -->
+    <mat-tab label="Enrollments">
+      <div class="tab-content">
+        <mat-card *ngIf="enrollments.length === 0">
+          <mat-card-content>
+            <div class="empty-state">
+              <mat-icon>assignment</mat-icon>
+              <p>No enrollments yet</p>
+              <button mat-raised-button color="primary" (click)="enrollPatient()">
+                Create First Enrollment
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngFor="let enrollment of enrollments" class="enrollment-card">
+          <mat-card-header>
+            <mat-card-title>{{ enrollment.program.name }}</mat-card-title>
+            <mat-card-subtitle>Status: {{ enrollment.status }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="enrollment-details">
+              <p *ngIf="enrollment.medicationName"><strong>Medication:</strong> {{ enrollment.medicationName }}</p>
+              <p *ngIf="enrollment.diagnosisDescription"><strong>Diagnosis:</strong> {{ enrollment.diagnosisDescription }}</p>
+              <p *ngIf="enrollment.prescriber"><strong>Prescriber:</strong> {{ enrollment.prescriber.name }}</p>
+              <p><strong>Created:</strong> {{ formatDate(enrollment.createdAt) }}</p>
+              <p *ngIf="enrollment.submittedAt"><strong>Submitted:</strong> {{ formatDate(enrollment.submittedAt) }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Benefits Tab -->
+    <mat-tab label="Benefits">
+      <div class="tab-content">
+        <div class="tab-header">
+          <button mat-raised-button color="primary" (click)="runBenefitsInvestigation()">
+            <mat-icon>search</mat-icon>
+            Run Benefits Investigation
+          </button>
+        </div>
+
+        <mat-card *ngIf="investigations.length === 0">
+          <mat-card-content>
+            <div class="empty-state">
+              <mat-icon>fact_check</mat-icon>
+              <p>No benefits investigations yet</p>
+              <button mat-raised-button color="primary" (click)="runBenefitsInvestigation()">
+                Run First Investigation
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngFor="let investigation of investigations" class="investigation-card">
+          <mat-card-header>
+            <mat-card-title>
+              {{ investigation.investigationType }} Investigation
+              <mat-chip class="type-chip">{{ investigation.coverageType }}</mat-chip>
+            </mat-card-title>
+            <mat-card-subtitle>
+              {{ investigation.payerName }} | Member ID: {{ investigation.memberId }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="investigation-details">
+              <div class="detail-row">
+                <span class="label">Coverage Status:</span>
+                <span class="value">{{ investigation.coverageStatus }}</span>
+              </div>
+              <div class="detail-row" *ngIf="investigation.priorAuthRequired !== null">
+                <span class="label">Prior Authorization:</span>
+                <span class="value" [class.required]="investigation.priorAuthRequired">
+                  {{ investigation.priorAuthRequired ? 'Required' : 'Not Required' }}
+                </span>
+              </div>
+              <div class="detail-row" *ngIf="investigation.specialtyPharmacyRequired !== null">
+                <span class="label">Specialty Pharmacy:</span>
+                <span class="value" [class.required]="investigation.specialtyPharmacyRequired">
+                  {{ investigation.specialtyPharmacyRequired ? 'Required' : 'Not Required' }}
+                </span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Created:</span>
+                <span class="value">{{ formatDate(investigation.createdAt) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Expires:</span>
+                <span class="value" [class.expired]="investigation.isExpired">
+                  {{ formatDate(investigation.expiresAt) }}
+                  <span *ngIf="investigation.isExpired" class="expired-badge">EXPIRED</span>
+                </span>
+              </div>
+              <div class="detail-row" *ngIf="investigation.notes">
+                <span class="label">Notes:</span>
+                <span class="value">{{ investigation.notes }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="loading-container" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 70" width="420" height="70">
+  <defs>
+    <style>
+      .logo-text {
+        fill: #111827;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: 2px;
+      }
+      .logo-divider {
+        fill: #C41030;
+      }
+    </style>
+  </defs>
+
+  <!-- SONXTRA text -->
+  <text x="10" y="45" class="logo-text">SONXTRA</text>
+
+  <!-- Red S divider circle with white S -->
+  <circle cx="195" cy="35" r="22" class="logo-divider"/>
+  <text x="195" y="47" class="logo-text" style="fill: #FFFFFF; font-size: 32px; font-weight: 900; text-anchor: middle;">S</text>
+
+  <!-- SUPPORT text -->
+  <text x="230" y="45" class="logo-text">SUPPORT</text>
+</svg>

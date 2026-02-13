@@ -1,0 +1,138 @@
+<div class="programs-management-container">
+  <h1>Programs & Services Management</h1>
+
+  <div *ngIf="loading && programs.length === 0" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading programs...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <div *ngIf="!loading && programs.length === 0" class="empty-state">
+    <mat-icon>folder_open</mat-icon>
+    <h3>No programs found</h3>
+    <p>Programs will appear here once they are created in the system</p>
+  </div>
+
+  <mat-accordion *ngIf="programs.length > 0">
+    <mat-expansion-panel *ngFor="let program of programs">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>label</mat-icon>
+          {{ program.name }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ getProgramServices(program.id).length }} services
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="program-content">
+        <p class="program-description" *ngIf="program.description">
+          {{ program.description }}
+        </p>
+
+        <mat-divider></mat-divider>
+
+        <div class="services-section">
+          <div class="services-header">
+            <h3>Support Services</h3>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openAddServiceDialog(program.id)"
+              *ngIf="selectedProgramId !== program.id">
+              <mat-icon>add</mat-icon>
+              Add Service
+            </button>
+          </div>
+
+          <!-- Add Service Form -->
+          <mat-card *ngIf="selectedProgramId === program.id" class="add-service-card">
+            <mat-card-content>
+              <h4>Add New Service</h4>
+              <form [formGroup]="addServiceForm" (ngSubmit)="addService()">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Service Name</mat-label>
+                  <input matInput formControlName="name" required>
+                  <mat-error *ngIf="addServiceForm.get('name')?.hasError('required')">
+                    Name is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="description"
+                    rows="3"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Service Type</mat-label>
+                  <mat-select formControlName="serviceType" required>
+                    <mat-option *ngFor="let type of serviceTypes" [value]="type">
+                      {{ formatServiceType(type) }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addServiceForm.get('serviceType')?.hasError('required')">
+                    Service type is required
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="form-actions">
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="cancelAddService()"
+                    [disabled]="addingService">
+                    Cancel
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="addServiceForm.invalid || addingService">
+                    <span *ngIf="!addingService">Add Service</span>
+                    <mat-spinner *ngIf="addingService" diameter="20"></mat-spinner>
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Services List -->
+          <div *ngIf="getProgramServices(program.id).length === 0 && selectedProgramId !== program.id"
+               class="no-services">
+            <mat-icon>info</mat-icon>
+            <p>No services configured for this program yet</p>
+          </div>
+
+          <div *ngIf="getProgramServices(program.id).length > 0" class="services-list">
+            <mat-card *ngFor="let service of getProgramServices(program.id)" class="service-card">
+              <mat-card-content>
+                <div class="service-header">
+                  <h4>{{ service.name }}</h4>
+                  <span class="service-type-badge">
+                    {{ formatServiceType(service.serviceType) }}
+                  </span>
+                </div>
+                <p *ngIf="service.description" class="service-description">
+                  {{ service.description }}
+                </p>
+                <div class="service-meta">
+                  <span class="service-status" [class.active]="service.active">
+                    <mat-icon>{{ service.active ? 'check_circle' : 'cancel' }}</mat-icon>
+                    {{ service.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

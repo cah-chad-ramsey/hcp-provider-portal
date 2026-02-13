@@ -1,0 +1,116 @@
+// Design System Colors from cp360.pen
+$cardinal-red: #C41030;
+$sonexus-teal: #008E97;
+$neutral-gray: #374151;
+$heading-color: #111827;
+$body-text: #374151;
+$caption-color: #6B7280;
+$border-color: #E5E7EB;
+$background-light: #F9FAFB;
+$white: #FFFFFF;
+
+.compose-container {
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    button {
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: $heading-color;
+      margin: 0;
+    }
+  }
+
+  .compose-card {
+    background: $white;
+
+    .error-message {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      background-color: #FEE2E2;
+      border: 1px solid #FCA5A5;
+      border-radius: 4px;
+      color: $cardinal-red;
+      margin-bottom: 24px;
+
+      mat-icon {
+        font-size: 20px;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .full-width {
+        width: 100%;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+        margin-top: 8px;
+      }
+    }
+
+    .help-text {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 24px;
+      padding: 16px;
+      background-color: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 4px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #3B82F6;
+        flex-shrink: 0;
+      }
+
+      p {
+        margin: 0;
+        color: $body-text;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .compose-container {
+    padding: 16px;
+
+    .compose-card {
+      form {
+        .form-actions {
+          flex-direction: column;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

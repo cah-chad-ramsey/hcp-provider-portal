@@ -1,0 +1,78 @@
+<div class="compose-container">
+  <div class="header">
+    <button mat-icon-button (click)="cancel()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>New Message</h1>
+  </div>
+
+  <mat-card class="compose-card">
+    <mat-card-content>
+      <div *ngIf="error" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <form [formGroup]="composeForm" (ngSubmit)="createThread()">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Subject</mat-label>
+          <input
+            matInput
+            formControlName="subject"
+            placeholder="Enter message subject"
+            required>
+          <mat-error *ngIf="composeForm.get('subject')?.hasError('required')">
+            Subject is required
+          </mat-error>
+          <mat-error *ngIf="composeForm.get('subject')?.hasError('minlength')">
+            Subject must be at least 3 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Program (Optional)</mat-label>
+          <mat-select formControlName="programId">
+            <mat-option [value]="null">None</mat-option>
+            <mat-option *ngFor="let program of programs" [value]="program.id">
+              {{ program.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Patient (Optional)</mat-label>
+          <mat-select formControlName="patientId">
+            <mat-option [value]="null">None</mat-option>
+            <mat-option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.firstName }} {{ patient.lastName }} ({{ patient.referenceId }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancel()"
+            [disabled]="loading">
+            Cancel
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="composeForm.invalid || loading">
+            <span *ngIf="!loading">Create Thread</span>
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </form>
+
+      <div class="help-text">
+        <mat-icon>info</mat-icon>
+        <p>After creating the thread, you'll be able to send your first message.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,133 @@
+<div class="thread-detail-container">
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-content" *ngIf="thread">
+      <h1>{{ thread.subject }}</h1>
+      <div class="thread-meta">
+        <span *ngIf="thread.programName" class="meta-item">
+          <mat-icon>label</mat-icon>
+          {{ thread.programName }}
+        </span>
+        <span *ngIf="thread.patientName" class="meta-item">
+          <mat-icon>local_hospital</mat-icon>
+          {{ thread.patientName }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading conversation...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <div *ngIf="!loading && thread" class="thread-content">
+    <!-- Messages -->
+    <div class="messages-container">
+      <div *ngFor="let message of thread.messages" class="message-card">
+        <div class="message-header">
+          <div class="message-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="message-info">
+            <span class="message-sender">{{ message.sentByName }}</span>
+            <span class="message-time">{{ formatDate(message.sentAt) }}</span>
+          </div>
+        </div>
+
+        <div class="message-content">
+          <p>{{ message.content }}</p>
+
+          <!-- Attachments -->
+          <div *ngIf="message.attachments && message.attachments.length > 0" class="attachments">
+            <div
+              *ngFor="let attachment of message.attachments"
+              class="attachment-item"
+              (click)="downloadAttachment(attachment.id, attachment.fileName)">
+              <mat-icon>attach_file</mat-icon>
+              <div class="attachment-info">
+                <span class="attachment-name">{{ attachment.fileName }}</span>
+                <span class="attachment-size">{{ formatFileSize(attachment.fileSize) }}</span>
+              </div>
+              <mat-icon class="download-icon">download</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!thread.messages || thread.messages.length === 0" class="empty-messages">
+        <mat-icon>forum</mat-icon>
+        <p>No messages yet. Start the conversation below.</p>
+      </div>
+    </div>
+
+    <!-- Reply Form -->
+    <mat-card class="reply-card">
+      <mat-card-content>
+        <h3>Reply</h3>
+
+        <form [formGroup]="replyForm" (ngSubmit)="sendReply()">
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Your message</mat-label>
+            <textarea
+              matInput
+              formControlName="content"
+              rows="4"
+              placeholder="Type your message here..."></textarea>
+            <mat-error *ngIf="replyForm.get('content')?.hasError('required')">
+              Message is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Uploaded Attachments -->
+          <div *ngIf="uploadedAttachments.length > 0" class="uploaded-attachments">
+            <mat-chip-listbox>
+              <mat-chip-option
+                *ngFor="let attachment of uploadedAttachments; let i = index"
+                (removed)="removeAttachment(i)">
+                {{ attachment.fileName }}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+
+          <div class="reply-actions">
+            <input
+              #fileInput
+              type="file"
+              multiple
+              hidden
+              (change)="onFileSelected($event)">
+
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="fileInput.click()"
+              [disabled]="uploadingFiles || sending">
+              <mat-icon>attach_file</mat-icon>
+              Attach Files
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="replyForm.invalid || sending || uploadingFiles">
+              <span *ngIf="!sending">Send Reply</span>
+              <mat-spinner *ngIf="sending" diameter="20"></mat-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

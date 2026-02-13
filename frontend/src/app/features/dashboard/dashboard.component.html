@@ -1,0 +1,193 @@
+<div class="dashboard-container">
+  <mat-toolbar color="primary">
+    <span>HCP Provider Portal</span>
+    <span class="spacer"></span>
+    <ng-container *ngIf="currentUser$ | async as user">
+      <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon>person</mat-icon>
+        {{ user.firstName }} {{ user.lastName }}
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item disabled>
+          <mat-icon>email</mat-icon>
+          <span>{{ user.email }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item *ngIf="isAdmin()" (click)="onViewAdmin()">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Admin Console</span>
+        </button>
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+  </mat-toolbar>
+
+  <div class="dashboard-content">
+    <h1>Welcome to the HCP Provider Portal</h1>
+
+    <!-- Getting Started / Affiliation Status Card -->
+    <div class="affiliation-status-card" *ngIf="currentUser$ | async as user">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>badge</mat-icon>
+            Provider Affiliation Status
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="loading">
+            <p>Loading affiliation status...</p>
+          </div>
+
+          <div *ngIf="!loading && affiliations.length === 0">
+            <p class="warning-message">
+              <mat-icon>warning</mat-icon>
+              You must request and have a provider affiliation approved before accessing patient data.
+            </p>
+            <button mat-raised-button color="primary" (click)="onRequestAffiliation()">
+              <mat-icon>add</mat-icon>
+              Request Provider Affiliation
+            </button>
+          </div>
+
+          <div *ngIf="!loading && affiliations.length > 0">
+            <div *ngFor="let affiliation of affiliations" class="affiliation-item">
+              <div class="affiliation-info">
+                <strong>{{ affiliation.provider.name }}</strong>
+                <span class="specialty">{{ affiliation.provider.specialty }}</span>
+                <span class="npi">NPI: {{ affiliation.provider.npi }}</span>
+              </div>
+              <mat-chip-set>
+                <mat-chip [class.status-pending]="affiliation.status === 'PENDING'"
+                          [class.status-approved]="affiliation.status === 'APPROVED'"
+                          [class.status-rejected]="affiliation.status === 'REJECTED'">
+                  {{ affiliation.status }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+
+            <div *ngIf="hasPendingAffiliation" class="info-message">
+              <mat-icon>info</mat-icon>
+              Your affiliation request is pending admin approval.
+            </div>
+
+            <div *ngIf="hasApprovedAffiliation" class="success-message">
+              <mat-icon>check_circle</mat-icon>
+              You have an approved affiliation and can access patient data.
+            </div>
+
+            <button mat-button color="primary" (click)="onRequestAffiliation()" class="add-more-button">
+              <mat-icon>add</mat-icon>
+              Request Another Affiliation
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Next Actions -->
+    <div class="next-actions-section" *ngIf="hasApprovedAffiliation">
+      <app-next-actions></app-next-actions>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="welcome-card" *ngIf="currentUser$ | async as user">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Welcome, {{ user.firstName }}!</mat-card-title>
+          <mat-card-subtitle>You are logged in as: {{ user.email }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Your Roles:</strong></p>
+          <mat-chip-set>
+            <mat-chip *ngFor="let role of user.roles">{{ role }}</mat-chip>
+          </mat-chip-set>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-cards">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Quick Actions</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <button mat-raised-button color="primary" (click)="onRequestAffiliation()" class="action-button">
+            <mat-icon>badge</mat-icon>
+            Provider Association
+          </button>
+          <button mat-raised-button color="accent" *ngIf="hasApprovedAffiliation" (click)="onViewPatients()" class="action-button">
+            <mat-icon>people</mat-icon>
+            Manage Patients
+          </button>
+          <button mat-raised-button (click)="onViewForms()" class="action-button">
+            <mat-icon>folder</mat-icon>
+            Forms & Resources
+          </button>
+          <button mat-raised-button (click)="onViewMessages()" class="action-button">
+            <mat-icon>forum</mat-icon>
+            Secure Messages
+          </button>
+          <button mat-raised-button *ngIf="isAdmin()" (click)="onViewAdmin()" class="action-button">
+            <mat-icon>admin_panel_settings</mat-icon>
+            Admin Console
+          </button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Implementation Progress</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="progress-list">
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 1: Infrastructure & Auth
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 2: Provider Association
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 3: Patient Management
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 4: Benefits Investigation
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 5: Forms & Resources
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 6: Secure Messaging
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 7: Admin Console & Auditing
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 8: Dashboard Next Best Action
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 9: Testing & Polish
+            </li>
+            <li class="completed">
+              <mat-icon>check_circle</mat-icon>
+              Phase 10: Documentation & Cloud Migration
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

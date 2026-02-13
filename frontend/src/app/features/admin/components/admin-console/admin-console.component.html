@@ -1,0 +1,56 @@
+<div class="admin-console-container">
+  <div class="header">
+    <div class="header-content">
+      <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+      <div>
+        <h1>Admin Console</h1>
+        <p class="subtitle">Manage system configuration and view audit logs</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-actions-grid">
+    <mat-card
+      *ngFor="let action of adminActions"
+      class="action-card"
+      (click)="navigateTo(action.route)">
+      <mat-card-content>
+        <div class="action-icon" [style.background-color]="action.color">
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </div>
+        <div class="action-content">
+          <h3>{{ action.title }}</h3>
+          <p>{{ action.description }}</p>
+        </div>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="info-card">
+    <mat-card-content>
+      <div class="info-header">
+        <mat-icon>info</mat-icon>
+        <h3>Admin Responsibilities</h3>
+      </div>
+      <ul class="responsibilities-list">
+        <li>
+          <mat-icon>check_circle</mat-icon>
+          <span>Review and approve provider affiliation requests to ensure proper access control</span>
+        </li>
+        <li>
+          <mat-icon>check_circle</mat-icon>
+          <span>Manage programs and support services to keep offerings up-to-date</span>
+        </li>
+        <li>
+          <mat-icon>check_circle</mat-icon>
+          <span>Upload compliance-approved forms and resources for provider access</span>
+        </li>
+        <li>
+          <mat-icon>check_circle</mat-icon>
+          <span>Monitor audit logs to ensure system security and compliance</span>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

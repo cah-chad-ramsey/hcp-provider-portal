@@ -1,0 +1,74 @@
+<mat-card class="next-actions-card">
+  <mat-card-header>
+    <mat-card-title>
+      <div class="header-content">
+        <div class="title-section">
+          <mat-icon class="header-icon">notification_important</mat-icon>
+          <span>Action Required</span>
+        </div>
+        <button
+          mat-icon-button
+          (click)="refresh()"
+          [disabled]="loading"
+          matTooltip="Refresh">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="32"></mat-spinner>
+      <p>Loading actions...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <div *ngIf="!loading && !error">
+      <div *ngIf="actions.length === 0" class="empty-state">
+        <mat-icon>check_circle</mat-icon>
+        <h3>All caught up!</h3>
+        <p>No actions required at this time</p>
+      </div>
+
+      <div *ngIf="actions.length > 0" class="actions-list">
+        <div
+          *ngFor="let action of actions"
+          class="action-item"
+          [class]="getPriorityClass(action.priority)"
+          (click)="handleAction(action)">
+
+          <div class="action-icon" [style.background-color]="getActionTypeColor(action.priority)">
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </div>
+
+          <div class="action-content">
+            <div class="action-header">
+              <h4>{{ action.title }}</h4>
+              <mat-chip class="priority-chip" [class]="getPriorityClass(action.priority)">
+                {{ action.priority }}
+              </mat-chip>
+            </div>
+            <p class="action-description">{{ action.description }}</p>
+            <div class="action-meta" *ngIf="action.resourceName || action.daysOverdue">
+              <span *ngIf="action.resourceName" class="resource-name">
+                <mat-icon>person</mat-icon>
+                {{ action.resourceName }}
+              </span>
+              <span *ngIf="action.daysOverdue" class="days-overdue">
+                <mat-icon>schedule</mat-icon>
+                {{ action.daysOverdue }} days
+              </span>
+            </div>
+          </div>
+
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

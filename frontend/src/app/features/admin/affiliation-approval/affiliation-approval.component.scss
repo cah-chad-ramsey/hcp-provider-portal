@@ -1,0 +1,90 @@
+.affiliation-approval-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      color: #3f51b5;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 48px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 48px;
+    color: #999;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      color: #4caf50;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+
+  .affiliation-table {
+    width: 100%;
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      strong {
+        color: #3f51b5;
+      }
+
+      .email {
+        font-size: 12px;
+        color: #666;
+      }
+    }
+
+    .provider-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .npi {
+        font-size: 12px;
+        color: #666;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+
+      button {
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    td, th {
+      padding: 12px 16px;
+    }
+  }
+}

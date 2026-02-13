@@ -1,0 +1,135 @@
+<div class="form-list-container">
+  <div class="header">
+    <h1>Forms & Resources</h1>
+    <button mat-raised-button color="primary" *ngIf="isAdmin()" (click)="onUploadForm()">
+      <mat-icon>upload_file</mat-icon>
+      Upload Form
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="filter-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Search</mat-label>
+          <input matInput formControlName="searchTerm" placeholder="Search by title or description">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Program</mat-label>
+          <mat-select formControlName="programId">
+            <mat-option [value]="">All Programs</mat-option>
+            <mat-option *ngFor="let program of programs" [value]="program.id">
+              {{ program.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option [value]="">All Categories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="filter-actions">
+          <button mat-raised-button color="primary" (click)="onSearch()">
+            Apply Filters
+          </button>
+          <button mat-button (click)="onClearFilters()">
+            Clear
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Forms Grid -->
+  <div class="forms-grid" *ngIf="!loading && forms.length > 0">
+    <mat-card *ngFor="let form of forms" class="form-card">
+      <mat-card-header>
+        <div class="card-header-content">
+          <mat-icon class="file-icon">{{ getFileIcon(form.mimeType) }}</mat-icon>
+          <div class="header-text">
+            <mat-card-title>{{ form.title }}</mat-card-title>
+            <mat-card-subtitle>{{ form.category }}</mat-card-subtitle>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p class="description" *ngIf="form.description">{{ form.description }}</p>
+
+        <div class="form-meta">
+          <div class="meta-item" *ngIf="form.programName">
+            <mat-icon>folder</mat-icon>
+            <span>{{ form.programName }}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>cloud_download</mat-icon>
+            <span>{{ form.downloadCount }} downloads</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>insert_drive_file</mat-icon>
+            <span>{{ formatFileSize(form.fileSize) }}</span>
+          </div>
+        </div>
+
+        <mat-chip-set class="form-chips">
+          <mat-chip *ngIf="form.complianceApproved" class="compliance-chip">
+            <mat-icon>verified</mat-icon>
+            Compliance Approved
+          </mat-chip>
+          <mat-chip *ngIf="form.version > 1" class="version-chip">
+            v{{ form.version }}
+          </mat-chip>
+        </mat-chip-set>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button (click)="onViewForm(form)">
+          <mat-icon>visibility</mat-icon>
+          View
+        </button>
+        <button mat-button (click)="onDownloadForm(form)">
+          <mat-icon>download</mat-icon>
+          Download
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <mat-card *ngIf="!loading && forms.length === 0" class="empty-state">
+    <mat-card-content>
+      <mat-icon>folder_open</mat-icon>
+      <h2>No forms found</h2>
+      <p>Try adjusting your filters or upload a new form</p>
+      <button mat-raised-button color="primary" *ngIf="isAdmin()" (click)="onUploadForm()">
+        <mat-icon>upload_file</mat-icon>
+        Upload First Form
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Pagination -->
+  <mat-paginator
+    *ngIf="!loading && totalElements > 0"
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[12, 24, 48]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>
